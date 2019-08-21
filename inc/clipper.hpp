@@ -49,6 +49,8 @@
 //use_deprecated: Enables temporary support for the obsolete functions
 //#define use_deprecated  
 
+#include "lib_platform/Globals.h"
+
 #include <vector>
 #include <list>
 #include <set>
@@ -58,6 +60,12 @@
 #include <ostream>
 #include <functional>
 #include <queue>
+
+#if defined(LIB_CLIPPER_LIBRARY)
+#  define LIB_CLIPPER_SHARED_EXPORT TP_EXPORT
+#else
+#  define LIB_CLIPPER_SHARED_EXPORT TP_IMPORT
+#endif
 
 namespace ClipperLib {
 
@@ -82,7 +90,7 @@ enum PolyFillType { pftEvenOdd, pftNonZero, pftPositive, pftNegative };
 
 #endif
 
-struct IntPoint {
+struct LIB_CLIPPER_SHARED_EXPORT IntPoint {
   cInt X;
   cInt Y;
 #ifdef use_xyz
@@ -113,7 +121,7 @@ std::ostream& operator <<(std::ostream &s, const IntPoint &p);
 std::ostream& operator <<(std::ostream &s, const Path &p);
 std::ostream& operator <<(std::ostream &s, const Paths &p);
 
-struct DoublePoint
+struct LIB_CLIPPER_SHARED_EXPORT DoublePoint
 {
   double X;
   double Y;
@@ -133,7 +141,7 @@ enum EndType {etClosedPolygon, etClosedLine, etOpenButt, etOpenSquare, etOpenRou
 class PolyNode;
 typedef std::vector< PolyNode* > PolyNodes;
 
-class PolyNode 
+class LIB_CLIPPER_SHARED_EXPORT PolyNode
 { 
 public:
     PolyNode();
@@ -157,7 +165,7 @@ private:
     friend class ClipperOffset; 
 };
 
-class PolyTree: public PolyNode
+class LIB_CLIPPER_SHARED_EXPORT PolyTree: public PolyNode
 { 
 public:
     ~PolyTree(){ Clear(); };
@@ -170,31 +178,31 @@ private:
     friend class Clipper; //to access AllNodes
 };
 
-bool Orientation(const Path &poly);
-double Area(const Path &poly);
-int PointInPolygon(const IntPoint &pt, const Path &path);
+bool LIB_CLIPPER_SHARED_EXPORT Orientation(const Path &poly);
+double LIB_CLIPPER_SHARED_EXPORT Area(const Path &poly);
+int LIB_CLIPPER_SHARED_EXPORT PointInPolygon(const IntPoint &pt, const Path &path);
 
-void SimplifyPolygon(const Path &in_poly, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
-void SimplifyPolygons(const Paths &in_polys, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
-void SimplifyPolygons(Paths &polys, PolyFillType fillType = pftEvenOdd);
+void LIB_CLIPPER_SHARED_EXPORT SimplifyPolygon(const Path &in_poly, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
+void LIB_CLIPPER_SHARED_EXPORT SimplifyPolygons(const Paths &in_polys, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
+void LIB_CLIPPER_SHARED_EXPORT SimplifyPolygons(Paths &polys, PolyFillType fillType = pftEvenOdd);
 
-void CleanPolygon(const Path& in_poly, Path& out_poly, double distance = 1.415);
-void CleanPolygon(Path& poly, double distance = 1.415);
-void CleanPolygons(const Paths& in_polys, Paths& out_polys, double distance = 1.415);
-void CleanPolygons(Paths& polys, double distance = 1.415);
+void LIB_CLIPPER_SHARED_EXPORT CleanPolygon(const Path& in_poly, Path& out_poly, double distance = 1.415);
+void LIB_CLIPPER_SHARED_EXPORT CleanPolygon(Path& poly, double distance = 1.415);
+void LIB_CLIPPER_SHARED_EXPORT CleanPolygons(const Paths& in_polys, Paths& out_polys, double distance = 1.415);
+void LIB_CLIPPER_SHARED_EXPORT CleanPolygons(Paths& polys, double distance = 1.415);
 
-void MinkowskiSum(const Path& pattern, const Path& path, Paths& solution, bool pathIsClosed);
-void MinkowskiSum(const Path& pattern, const Paths& paths, Paths& solution, bool pathIsClosed);
-void MinkowskiDiff(const Path& poly1, const Path& poly2, Paths& solution);
+void LIB_CLIPPER_SHARED_EXPORT MinkowskiSum(const Path& pattern, const Path& path, Paths& solution, bool pathIsClosed);
+void LIB_CLIPPER_SHARED_EXPORT MinkowskiSum(const Path& pattern, const Paths& paths, Paths& solution, bool pathIsClosed);
+void LIB_CLIPPER_SHARED_EXPORT MinkowskiDiff(const Path& poly1, const Path& poly2, Paths& solution);
 
-void PolyTreeToPaths(const PolyTree& polytree, Paths& paths);
-void ClosedPathsFromPolyTree(const PolyTree& polytree, Paths& paths);
-void OpenPathsFromPolyTree(PolyTree& polytree, Paths& paths);
+void LIB_CLIPPER_SHARED_EXPORT PolyTreeToPaths(const PolyTree& polytree, Paths& paths);
+void LIB_CLIPPER_SHARED_EXPORT ClosedPathsFromPolyTree(const PolyTree& polytree, Paths& paths);
+void LIB_CLIPPER_SHARED_EXPORT OpenPathsFromPolyTree(PolyTree& polytree, Paths& paths);
 
-void ReversePath(Path& p);
-void ReversePaths(Paths& p);
+void LIB_CLIPPER_SHARED_EXPORT ReversePath(Path& p);
+void LIB_CLIPPER_SHARED_EXPORT ReversePaths(Paths& p);
 
-struct IntRect { cInt left; cInt top; cInt right; cInt bottom; };
+struct LIB_CLIPPER_SHARED_EXPORT IntRect { cInt left; cInt top; cInt right; cInt bottom; };
 
 //enums that are used internally ...
 enum EdgeSide { esLeft = 1, esRight = 2};
@@ -217,7 +225,7 @@ typedef std::vector < IntersectNode* > IntersectList;
 //ClipperBase is the ancestor to the Clipper class. It should not be
 //instantiated directly. This class simply abstracts the conversion of sets of
 //polygon coordinates into edge objects that are stored in a LocalMinima list.
-class ClipperBase
+class LIB_CLIPPER_SHARED_EXPORT ClipperBase
 {
 public:
   ClipperBase();
@@ -260,7 +268,7 @@ protected:
 };
 //------------------------------------------------------------------------------
 
-class Clipper : public virtual ClipperBase
+class LIB_CLIPPER_SHARED_EXPORT Clipper : public virtual ClipperBase
 {
 public:
   Clipper(int initOptions = 0);
@@ -357,7 +365,7 @@ private:
 };
 //------------------------------------------------------------------------------
 
-class ClipperOffset 
+class LIB_CLIPPER_SHARED_EXPORT ClipperOffset
 {
 public:
   ClipperOffset(double miterLimit = 2.0, double roundPrecision = 0.25);
@@ -388,7 +396,7 @@ private:
 };
 //------------------------------------------------------------------------------
 
-class clipperException : public std::exception
+class LIB_CLIPPER_SHARED_EXPORT clipperException : public std::exception
 {
   public:
     clipperException(const char* description): m_descr(description) {}
