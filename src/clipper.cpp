@@ -479,8 +479,8 @@ int PointInPolygon(const IntPoint &pt, const Path &path)
         if (ipNext.X > pt.X) result = 1 - result;
         else
         {
-          double d = double(ip.X - pt.X) * (ipNext.Y - pt.Y) -
-              double(ipNext.X - pt.X) * (ip.Y - pt.Y);
+          double d = double(ip.X - pt.X) * double(ipNext.Y - pt.Y) -
+              double(ipNext.X - pt.X) * double(ip.Y - pt.Y);
           if (Equals(d, 0.0)) return -1;
           if ((d > 0) == (ipNext.Y > ip.Y)) result = 1 - result;
         }
@@ -488,8 +488,8 @@ int PointInPolygon(const IntPoint &pt, const Path &path)
       {
         if (ipNext.X > pt.X)
         {
-          double d = double(ip.X - pt.X) * (ipNext.Y - pt.Y) -
-              double(ipNext.X - pt.X) * (ip.Y - pt.Y);
+          double d = double(ip.X - pt.X) * double(ipNext.Y - pt.Y) -
+              double(ipNext.X - pt.X) * double(ip.Y - pt.Y);
           if (Equals(d, 0.0)) return -1;
           if ((d > 0) == (ipNext.Y > ip.Y)) result = 1 - result;
         }
@@ -520,8 +520,8 @@ int PointInPolygon (const IntPoint &pt, OutPt *op)
         if (op->Next->Pt.X > pt.X) result = 1 - result;
         else
         {
-          double d = double(op->Pt.X - pt.X) * (op->Next->Pt.Y - pt.Y) -
-              double(op->Next->Pt.X - pt.X) * (op->Pt.Y - pt.Y);
+          double d = double(op->Pt.X - pt.X) * double(op->Next->Pt.Y - pt.Y) -
+              double(op->Next->Pt.X - pt.X) * double(op->Pt.Y - pt.Y);
           if (Equals(d, 0.0)) return -1;
           if ((d > 0) == (op->Next->Pt.Y > op->Pt.Y)) result = 1 - result;
         }
@@ -529,8 +529,8 @@ int PointInPolygon (const IntPoint &pt, OutPt *op)
       {
         if (op->Next->Pt.X > pt.X)
         {
-          double d = double(op->Pt.X - pt.X) * (op->Next->Pt.Y - pt.Y) -
-              double(op->Next->Pt.X - pt.X) * (op->Pt.Y - pt.Y);
+          double d = double(op->Pt.X - pt.X) * double(op->Next->Pt.Y - pt.Y) -
+              double(op->Next->Pt.X - pt.X) * double(op->Pt.Y - pt.Y);
           if (Equals(d, 0.0)) return -1;
           if ((d > 0) == (op->Next->Pt.Y > op->Pt.Y)) result = 1 - result;
         }
@@ -604,7 +604,7 @@ inline bool IsHorizontal(TEdge &e)
 inline double GetDx(const IntPoint pt1, const IntPoint pt2)
 {
   return (pt1.Y == pt2.Y) ?
-        HORIZONTAL : double(pt2.X - pt1.X) / (pt2.Y - pt1.Y);
+        HORIZONTAL : double(pt2.X - pt1.X) / double(pt2.Y - pt1.Y);
 }
 //---------------------------------------------------------------------------
 
@@ -612,7 +612,7 @@ inline void SetDx(TEdge &e)
 {
   cInt dy  = (e.Top.Y - e.Bot.Y);
   if (dy == 0) e.Dx = HORIZONTAL;
-  else e.Dx = double(e.Top.X - e.Bot.X) / dy;
+  else e.Dx = double(e.Top.X - e.Bot.X) / double(dy);
 }
 //---------------------------------------------------------------------------
 
@@ -635,7 +635,7 @@ inline void SwapPolyIndexes(TEdge &Edge1, TEdge &Edge2)
 inline cInt TopX(TEdge &edge, const cInt currentY)
 {
   return ( currentY == edge.Top.Y ) ?
-        edge.Top.X : edge.Bot.X + Round(edge.Dx *(currentY - edge.Bot.Y));
+        edge.Top.X : edge.Bot.X + Round(edge.Dx * double(currentY - edge.Bot.Y));
 }
 //------------------------------------------------------------------------------
 
@@ -659,8 +659,8 @@ void IntersectPoint(TEdge &Edge1, TEdge &Edge2, IntPoint &ip)
       ip.Y = Edge2.Bot.Y;
     else
     {
-      b2 = Edge2.Bot.Y - (Edge2.Bot.X / Edge2.Dx);
-      ip.Y = Round(ip.X / Edge2.Dx + b2);
+      b2 = double(Edge2.Bot.Y) - (double(Edge2.Bot.X) / Edge2.Dx);
+      ip.Y = Round(double(ip.X) / Edge2.Dx + b2);
     }
   }
   else if (Equals(Edge2.Dx, 0))
@@ -670,14 +670,14 @@ void IntersectPoint(TEdge &Edge1, TEdge &Edge2, IntPoint &ip)
       ip.Y = Edge1.Bot.Y;
     else
     {
-      b1 = Edge1.Bot.Y - (Edge1.Bot.X / Edge1.Dx);
-      ip.Y = Round(ip.X / Edge1.Dx + b1);
+      b1 = double(Edge1.Bot.Y) - (double(Edge1.Bot.X) / Edge1.Dx);
+      ip.Y = Round(double(ip.X) / Edge1.Dx + b1);
     }
   }
   else
   {
-    b1 = Edge1.Bot.X - Edge1.Bot.Y * Edge1.Dx;
-    b2 = Edge2.Bot.X - Edge2.Bot.Y * Edge2.Dx;
+    b1 = double(Edge1.Bot.X) - double(Edge1.Bot.Y) * Edge1.Dx;
+    b2 = double(Edge2.Bot.X) - double(Edge2.Bot.Y) * Edge2.Dx;
     double q = (b2-b1) / (Edge1.Dx - Edge2.Dx);
     ip.Y = Round(q);
     if (std::fabs(Edge1.Dx) < std::fabs(Edge2.Dx))
@@ -4035,11 +4035,11 @@ void ClipperOffset::DoOffset(double delta)
       if (node.m_jointype == jtRound)
       {
         double X = 1.0, Y = 0.0;
-        for (cInt j = 1; j <= steps; j++)
+        for (cInt j = 1; j <= cInt(steps); j++)
         {
           m_destPoly.push_back(IntPoint(
-                                 Round(m_srcPoly[0].X + X * delta),
-                               Round(m_srcPoly[0].Y + Y * delta)));
+                                 Round(double(m_srcPoly[0].X) + X * delta),
+                                 Round(double(m_srcPoly[0].Y) + Y * delta)));
           double X2 = X;
           X = X * m_cos - m_sin * Y;
           Y = X2 * m_sin + Y * m_cos;
@@ -4051,8 +4051,8 @@ void ClipperOffset::DoOffset(double delta)
         for (int j = 0; j < 4; ++j)
         {
           m_destPoly.push_back(IntPoint(
-                                 Round(m_srcPoly[0].X + X * delta),
-                               Round(m_srcPoly[0].Y + Y * delta)));
+                                 Round(double(m_srcPoly[0].X) + X * delta),
+                                 Round(double(m_srcPoly[0].Y) + Y * delta)));
           if (X < 0) X = 1;
           else if (Y < 0) Y = 1;
           else X = -1;
@@ -4105,11 +4105,11 @@ void ClipperOffset::DoOffset(double delta)
       if (node.m_endtype == etOpenButt)
       {
         int j = len - 1;
-        pt1 = IntPoint(cInt(Round(m_srcPoly[size_t(j)].X + m_normals[size_t(j)].X * delta)),
-            cInt(Round(m_srcPoly[size_t(j)].Y + m_normals[size_t(j)].Y * delta)));
+        pt1 = IntPoint(cInt(Round(double(m_srcPoly[size_t(j)].X) + m_normals[size_t(j)].X * delta)),
+            cInt(Round(double(m_srcPoly[size_t(j)].Y) + m_normals[size_t(j)].Y * delta)));
         m_destPoly.push_back(pt1);
-        pt1 = IntPoint(cInt(Round(m_srcPoly[size_t(j)].X - m_normals[size_t(j)].X * delta)),
-            cInt(Round(m_srcPoly[size_t(j)].Y - m_normals[size_t(j)].Y * delta)));
+        pt1 = IntPoint(cInt(Round(double(m_srcPoly[size_t(j)].X) - m_normals[size_t(j)].X * delta)),
+            cInt(Round(double(m_srcPoly[size_t(j)].Y) - m_normals[size_t(j)].Y * delta)));
         m_destPoly.push_back(pt1);
       }
       else
@@ -4134,11 +4134,11 @@ void ClipperOffset::DoOffset(double delta)
 
       if (node.m_endtype == etOpenButt)
       {
-        pt1 = IntPoint(cInt(Round(m_srcPoly[0].X - m_normals[0].X * delta)),
-            cInt(Round(m_srcPoly[0].Y - m_normals[0].Y * delta)));
+        pt1 = IntPoint(cInt(Round(double(m_srcPoly[0].X) - m_normals[0].X * delta)),
+            cInt(Round(double(m_srcPoly[0].Y) - m_normals[0].Y * delta)));
         m_destPoly.push_back(pt1);
-        pt1 = IntPoint(cInt(Round(m_srcPoly[0].X + m_normals[0].X * delta)),
-            cInt(Round(m_srcPoly[0].Y + m_normals[0].Y * delta)));
+        pt1 = IntPoint(cInt(Round(double(m_srcPoly[0].X) + m_normals[0].X * delta)),
+            cInt(Round(double(m_srcPoly[0].Y) + m_normals[0].Y * delta)));
         m_destPoly.push_back(pt1);
       }
       else
@@ -4166,8 +4166,8 @@ void ClipperOffset::OffsetPoint(int j, int& k, JoinType jointype)
     double cosA = (m_normals[size_t(k)].X * m_normals[size_t(j)].X + m_normals[size_t(j)].Y * m_normals[size_t(k)].Y );
     if (cosA > 0) // angle => 0 degrees
     {
-      m_destPoly.push_back(IntPoint(Round(m_srcPoly[size_t(j)].X + m_normals[size_t(k)].X * m_delta),
-          Round(m_srcPoly[size_t(j)].Y + m_normals[size_t(k)].Y * m_delta)));
+      m_destPoly.push_back(IntPoint(Round(double(m_srcPoly[size_t(j)].X) + m_normals[size_t(k)].X * m_delta),
+                                    Round(double(m_srcPoly[size_t(j)].Y) + m_normals[size_t(k)].Y * m_delta)));
       return;
     }
     //else angle => 180 degrees
@@ -4177,11 +4177,11 @@ void ClipperOffset::OffsetPoint(int j, int& k, JoinType jointype)
 
   if (m_sinA * m_delta < 0)
   {
-    m_destPoly.push_back(IntPoint(Round(m_srcPoly[size_t(j)].X + m_normals[size_t(k)].X * m_delta),
-        Round(m_srcPoly[size_t(j)].Y + m_normals[size_t(k)].Y * m_delta)));
+    m_destPoly.push_back(IntPoint(Round(double(m_srcPoly[size_t(j)].X) + m_normals[size_t(k)].X * m_delta),
+                                  Round(double(m_srcPoly[size_t(j)].Y) + m_normals[size_t(k)].Y * m_delta)));
     m_destPoly.push_back(m_srcPoly[size_t(j)]);
-    m_destPoly.push_back(IntPoint(Round(m_srcPoly[size_t(j)].X + m_normals[size_t(j)].X * m_delta),
-        Round(m_srcPoly[size_t(j)].Y + m_normals[size_t(j)].Y * m_delta)));
+    m_destPoly.push_back(IntPoint(Round(double(m_srcPoly[size_t(j)].X) + m_normals[size_t(j)].X * m_delta),
+                                  Round(double(m_srcPoly[size_t(j)].Y) + m_normals[size_t(j)].Y * m_delta)));
   }
   else
     switch (jointype)
@@ -4205,19 +4205,19 @@ void ClipperOffset::DoSquare(int j, int k)
   double dx = std::tan(std::atan2(m_sinA,
                                   m_normals[size_t(k)].X * m_normals[size_t(j)].X + m_normals[size_t(k)].Y * m_normals[size_t(j)].Y) / 4);
   m_destPoly.push_back(IntPoint(
-                         Round(m_srcPoly[size_t(j)].X + m_delta * (m_normals[size_t(k)].X - m_normals[size_t(k)].Y * dx)),
-      Round(m_srcPoly[size_t(j)].Y + m_delta * (m_normals[size_t(k)].Y + m_normals[size_t(k)].X * dx))));
+                         Round(double(m_srcPoly[size_t(j)].X) + m_delta * (m_normals[size_t(k)].X - m_normals[size_t(k)].Y * dx)),
+                         Round(double(m_srcPoly[size_t(j)].Y) + m_delta * (m_normals[size_t(k)].Y + m_normals[size_t(k)].X * dx))));
   m_destPoly.push_back(IntPoint(
-                         Round(m_srcPoly[size_t(j)].X + m_delta * (m_normals[size_t(j)].X + m_normals[size_t(j)].Y * dx)),
-      Round(m_srcPoly[size_t(j)].Y + m_delta * (m_normals[size_t(j)].Y - m_normals[size_t(j)].X * dx))));
+                         Round(double(m_srcPoly[size_t(j)].X) + m_delta * (m_normals[size_t(j)].X + m_normals[size_t(j)].Y * dx)),
+                         Round(double(m_srcPoly[size_t(j)].Y) + m_delta * (m_normals[size_t(j)].Y - m_normals[size_t(j)].X * dx))));
 }
 //------------------------------------------------------------------------------
 
 void ClipperOffset::DoMiter(int j, int k, double r)
 {
   double q = m_delta / r;
-  m_destPoly.push_back(IntPoint(Round(m_srcPoly[size_t(j)].X + (m_normals[size_t(k)].X + m_normals[size_t(j)].X) * q),
-      Round(m_srcPoly[size_t(j)].Y + (m_normals[size_t(k)].Y + m_normals[size_t(j)].Y) * q)));
+  m_destPoly.push_back(IntPoint(Round(double(m_srcPoly[size_t(j)].X) + (m_normals[size_t(k)].X + m_normals[size_t(j)].X) * q),
+                                Round(double(m_srcPoly[size_t(j)].Y) + (m_normals[size_t(k)].Y + m_normals[size_t(j)].Y) * q)));
 }
 //------------------------------------------------------------------------------
 
@@ -4231,15 +4231,15 @@ void ClipperOffset::DoRound(int j, int k)
   for (int i = 0; i < steps; ++i)
   {
     m_destPoly.push_back(IntPoint(
-                           Round(m_srcPoly[size_t(j)].X + X * m_delta),
-                         Round(m_srcPoly[size_t(j)].Y + Y * m_delta)));
+                           Round(double(m_srcPoly[size_t(j)].X) + X * m_delta),
+                           Round(double(m_srcPoly[size_t(j)].Y) + Y * m_delta)));
     X2 = X;
     X = X * m_cos - m_sin * Y;
     Y = X2 * m_sin + Y * m_cos;
   }
   m_destPoly.push_back(IntPoint(
-                         Round(m_srcPoly[size_t(j)].X + m_normals[size_t(j)].X * m_delta),
-      Round(m_srcPoly[size_t(j)].Y + m_normals[size_t(j)].Y * m_delta)));
+                         Round(double(m_srcPoly[size_t(j)].X) + m_normals[size_t(j)].X * m_delta),
+                         Round(double(m_srcPoly[size_t(j)].Y) + m_normals[size_t(j)].Y * m_delta)));
 }
 
 //------------------------------------------------------------------------------
@@ -4364,8 +4364,8 @@ double DistanceFromLineSqrd(
   //see http://en.wikipedia.org/wiki/Perpendicular_distance
   double A = double(ln1.Y - ln2.Y);
   double B = double(ln2.X - ln1.X);
-  double C = A * ln1.X  + B * ln1.Y;
-  C = A * pt.X + B * pt.Y - C;
+  double C = A * double(ln1.X)  + B * double(ln1.Y);
+  C = A * double(pt.X) + B * double(pt.Y) - C;
   return (C * C) / (A * A + B * B);
 }
 //---------------------------------------------------------------------------
