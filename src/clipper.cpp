@@ -275,6 +275,8 @@ public:
 
   Int128(const long64& _hi, const ulong64& _lo): lo(_lo), hi(_hi){}
 
+  ~Int128()=default;
+
   Int128& operator = (const Int128 &val)
   {
     if(&val != this)

@@ -143,6 +143,7 @@ typedef std::vector< PolyNode* > PolyNodes;
 
 class LIB_CLIPPER_SHARED_EXPORT PolyNode
 { 
+  LIB_PLATFORM_NONCOPYABLE(PolyNode);
 public:
     PolyNode();
     virtual ~PolyNode(){};
@@ -167,6 +168,7 @@ private:
 
 class LIB_CLIPPER_SHARED_EXPORT PolyTree: public PolyNode
 { 
+  LIB_PLATFORM_NONCOPYABLE(PolyTree);
 public:
     ~PolyTree(){ Clear(); };
     PolyNode* GetFirst() const;
@@ -227,6 +229,7 @@ typedef std::vector < IntersectNode* > IntersectList;
 //polygon coordinates into edge objects that are stored in a LocalMinima list.
 class LIB_CLIPPER_SHARED_EXPORT ClipperBase
 {
+  LIB_PLATFORM_NONCOPYABLE(ClipperBase);
 public:
   ClipperBase();
   virtual ~ClipperBase();
@@ -270,6 +273,7 @@ protected:
 
 class LIB_CLIPPER_SHARED_EXPORT Clipper : public virtual ClipperBase
 {
+  LIB_PLATFORM_NONCOPYABLE(Clipper);
 public:
   Clipper(int initOptions = 0);
   bool Execute(ClipType clipType,
@@ -367,6 +371,7 @@ private:
 
 class LIB_CLIPPER_SHARED_EXPORT ClipperOffset
 {
+  LIB_PLATFORM_NONCOPYABLE(ClipperOffset);
 public:
   ClipperOffset(double miterLimit = 2.0, double roundPrecision = 0.25);
   ~ClipperOffset();
@@ -398,6 +403,7 @@ private:
 
 class LIB_CLIPPER_SHARED_EXPORT clipperException : public std::exception
 {
+  LIB_PLATFORM_NONCOPYABLE(clipperException);
   public:
     clipperException(const char* description): m_descr(description) {}
     virtual ~clipperException() throw() {}
