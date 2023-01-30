@@ -62,9 +62,9 @@
 #include <queue>
 
 #if defined(LIB_CLIPPER_LIBRARY)
-#  define LIB_CLIPPER_SHARED_EXPORT TP_EXPORT
+#  define LIB_CLIPPER_EXPORT TP_EXPORT
 #else
-#  define LIB_CLIPPER_SHARED_EXPORT TP_IMPORT
+#  define LIB_CLIPPER_EXPORT TP_IMPORT
 #endif
 
 namespace ClipperLib {
@@ -90,7 +90,7 @@ enum PolyFillType { pftEvenOdd, pftNonZero, pftPositive, pftNegative };
 
 #endif
 
-struct LIB_CLIPPER_SHARED_EXPORT IntPoint {
+struct LIB_CLIPPER_EXPORT IntPoint {
   cInt X;
   cInt Y;
 #ifdef use_xyz
@@ -121,7 +121,7 @@ std::ostream& operator <<(std::ostream &s, const IntPoint &p);
 std::ostream& operator <<(std::ostream &s, const Path &p);
 std::ostream& operator <<(std::ostream &s, const Paths &p);
 
-struct LIB_CLIPPER_SHARED_EXPORT DoublePoint
+struct LIB_CLIPPER_EXPORT DoublePoint
 {
   double X;
   double Y;
@@ -141,7 +141,7 @@ enum EndType {etClosedPolygon, etClosedLine, etOpenButt, etOpenSquare, etOpenRou
 class PolyNode;
 typedef std::vector< PolyNode* > PolyNodes;
 
-class LIB_CLIPPER_SHARED_EXPORT PolyNode
+class LIB_CLIPPER_EXPORT PolyNode
 { 
   LIB_PLATFORM_NONCOPYABLE(PolyNode);
 public:
@@ -166,7 +166,7 @@ private:
     friend class ClipperOffset; 
 };
 
-class LIB_CLIPPER_SHARED_EXPORT PolyTree: public PolyNode
+class LIB_CLIPPER_EXPORT PolyTree: public PolyNode
 { 
   LIB_PLATFORM_NONCOPYABLE(PolyTree);
 public:
@@ -180,31 +180,31 @@ private:
     friend class Clipper; //to access AllNodes
 };
 
-bool LIB_CLIPPER_SHARED_EXPORT Orientation(const Path &poly);
-double LIB_CLIPPER_SHARED_EXPORT Area(const Path &poly);
-int LIB_CLIPPER_SHARED_EXPORT PointInPolygon(const IntPoint &pt, const Path &path);
+bool LIB_CLIPPER_EXPORT Orientation(const Path &poly);
+double LIB_CLIPPER_EXPORT Area(const Path &poly);
+int LIB_CLIPPER_EXPORT PointInPolygon(const IntPoint &pt, const Path &path);
 
-void LIB_CLIPPER_SHARED_EXPORT SimplifyPolygon(const Path &in_poly, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
-void LIB_CLIPPER_SHARED_EXPORT SimplifyPolygons(const Paths &in_polys, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
-void LIB_CLIPPER_SHARED_EXPORT SimplifyPolygons(Paths &polys, PolyFillType fillType = pftEvenOdd);
+void LIB_CLIPPER_EXPORT SimplifyPolygon(const Path &in_poly, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
+void LIB_CLIPPER_EXPORT SimplifyPolygons(const Paths &in_polys, Paths &out_polys, PolyFillType fillType = pftEvenOdd);
+void LIB_CLIPPER_EXPORT SimplifyPolygons(Paths &polys, PolyFillType fillType = pftEvenOdd);
 
-void LIB_CLIPPER_SHARED_EXPORT CleanPolygon(const Path& in_poly, Path& out_poly, double distance = 1.415);
-void LIB_CLIPPER_SHARED_EXPORT CleanPolygon(Path& poly, double distance = 1.415);
-void LIB_CLIPPER_SHARED_EXPORT CleanPolygons(const Paths& in_polys, Paths& out_polys, double distance = 1.415);
-void LIB_CLIPPER_SHARED_EXPORT CleanPolygons(Paths& polys, double distance = 1.415);
+void LIB_CLIPPER_EXPORT CleanPolygon(const Path& in_poly, Path& out_poly, double distance = 1.415);
+void LIB_CLIPPER_EXPORT CleanPolygon(Path& poly, double distance = 1.415);
+void LIB_CLIPPER_EXPORT CleanPolygons(const Paths& in_polys, Paths& out_polys, double distance = 1.415);
+void LIB_CLIPPER_EXPORT CleanPolygons(Paths& polys, double distance = 1.415);
 
-void LIB_CLIPPER_SHARED_EXPORT MinkowskiSum(const Path& pattern, const Path& path, Paths& solution, bool pathIsClosed);
-void LIB_CLIPPER_SHARED_EXPORT MinkowskiSum(const Path& pattern, const Paths& paths, Paths& solution, bool pathIsClosed);
-void LIB_CLIPPER_SHARED_EXPORT MinkowskiDiff(const Path& poly1, const Path& poly2, Paths& solution);
+void LIB_CLIPPER_EXPORT MinkowskiSum(const Path& pattern, const Path& path, Paths& solution, bool pathIsClosed);
+void LIB_CLIPPER_EXPORT MinkowskiSum(const Path& pattern, const Paths& paths, Paths& solution, bool pathIsClosed);
+void LIB_CLIPPER_EXPORT MinkowskiDiff(const Path& poly1, const Path& poly2, Paths& solution);
 
-void LIB_CLIPPER_SHARED_EXPORT PolyTreeToPaths(const PolyTree& polytree, Paths& paths);
-void LIB_CLIPPER_SHARED_EXPORT ClosedPathsFromPolyTree(const PolyTree& polytree, Paths& paths);
-void LIB_CLIPPER_SHARED_EXPORT OpenPathsFromPolyTree(PolyTree& polytree, Paths& paths);
+void LIB_CLIPPER_EXPORT PolyTreeToPaths(const PolyTree& polytree, Paths& paths);
+void LIB_CLIPPER_EXPORT ClosedPathsFromPolyTree(const PolyTree& polytree, Paths& paths);
+void LIB_CLIPPER_EXPORT OpenPathsFromPolyTree(PolyTree& polytree, Paths& paths);
 
-void LIB_CLIPPER_SHARED_EXPORT ReversePath(Path& p);
-void LIB_CLIPPER_SHARED_EXPORT ReversePaths(Paths& p);
+void LIB_CLIPPER_EXPORT ReversePath(Path& p);
+void LIB_CLIPPER_EXPORT ReversePaths(Paths& p);
 
-struct LIB_CLIPPER_SHARED_EXPORT IntRect { cInt left; cInt top; cInt right; cInt bottom; };
+struct LIB_CLIPPER_EXPORT IntRect { cInt left; cInt top; cInt right; cInt bottom; };
 
 //enums that are used internally ...
 enum EdgeSide { esLeft = 1, esRight = 2};
@@ -227,7 +227,7 @@ typedef std::vector < IntersectNode* > IntersectList;
 //ClipperBase is the ancestor to the Clipper class. It should not be
 //instantiated directly. This class simply abstracts the conversion of sets of
 //polygon coordinates into edge objects that are stored in a LocalMinima list.
-class LIB_CLIPPER_SHARED_EXPORT ClipperBase
+class LIB_CLIPPER_EXPORT ClipperBase
 {
   LIB_PLATFORM_NONCOPYABLE(ClipperBase);
 public:
@@ -271,7 +271,7 @@ protected:
 };
 //------------------------------------------------------------------------------
 
-class LIB_CLIPPER_SHARED_EXPORT Clipper : public virtual ClipperBase
+class LIB_CLIPPER_EXPORT Clipper : public virtual ClipperBase
 {
   LIB_PLATFORM_NONCOPYABLE(Clipper);
 public:
@@ -369,7 +369,7 @@ private:
 };
 //------------------------------------------------------------------------------
 
-class LIB_CLIPPER_SHARED_EXPORT ClipperOffset
+class LIB_CLIPPER_EXPORT ClipperOffset
 {
   LIB_PLATFORM_NONCOPYABLE(ClipperOffset);
 public:
@@ -401,7 +401,7 @@ private:
 };
 //------------------------------------------------------------------------------
 
-class LIB_CLIPPER_SHARED_EXPORT clipperException : public std::exception
+class LIB_CLIPPER_EXPORT clipperException : public std::exception
 {
   LIB_PLATFORM_NONCOPYABLE(clipperException);
   public:
